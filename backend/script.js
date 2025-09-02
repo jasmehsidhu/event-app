@@ -17,8 +17,8 @@ app.use(compression())
 var db=new pg.Client({
   host: process.env.HOST, // Render host
   port: 5432,
-  user: process.env.USER, // Render DB user
-  password: process.env.PASSWORD, // Render DB password
+  user: process.env.DB_USER, // Render DB user
+  password: process.env.DB_PASSWORD, // Render DB password
   database: process.env.DATABASE, // Render DB name
   ssl: {
     rejectUnauthorized: false // needed for Render Postgres
@@ -53,4 +53,3 @@ app.post('/submit',(req,res)=>{
 })
 
 })
-
