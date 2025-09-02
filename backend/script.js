@@ -2,12 +2,11 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import pg from 'pg'
-import env from 'dotenv'
 import bcrypt from 'bcrypt'
 
 const app=express();
 
-env.config()
+
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -53,3 +52,4 @@ app.post('/submit',(req,res)=>{
 })
 
 })
+
