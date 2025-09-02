@@ -2,11 +2,12 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import pg from 'pg'
+import env from 'dotenv'
 import bcrypt from 'bcrypt'
 
 const app=express();
 
-
+env.config()
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -14,11 +15,14 @@ app.use(express.json())
 app.use(cors())
 app.use(compression())
 var db=new pg.Client({
-    database:'TFSS_Events',
-    user:'postgres',
-    host:'localhost',
-    port:5432,
-    password:'sidhumoosewala'
+  host: process.env.HOST, // Render host
+  port: 5432,
+  user: process.env.USER, // Render DB user
+  password: process.env.PASSWORD, // Render DB password
+  database: process.env.DATABASE, // Render DB name
+  ssl: {
+    rejectUnauthorized: false // needed for Render Postgres
+  }
 })
 db.connect()
 
@@ -48,4 +52,5 @@ app.post('/submit',(req,res)=>{
     
 })
 
+})
 })
