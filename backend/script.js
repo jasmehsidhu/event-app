@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt'
 
 const app=express();
 
-
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -17,25 +16,28 @@ var db=new pg.Client({
   host: process.env.HOST, // Render host
   port: 5432,
   user: process.env.DB_USER, // Render DB user
-  password: process.env.DB_PASSWORD, // Render DB password
+  password:process.env.DB_PASSWORD, // Render DB password
   database: process.env.DATABASE, // Render DB name
-  ssl: {
-    rejectUnauthorized: false // needed for Render Postgres
-  }
+  ssl: { rejectUnauthorized: false } 
 })
 db.connect()
 
 app.post('/',(req,res)=>{
     console.log(req.body)
-    db.query(`INSERT INTO Events VALUES('${req.body.name}','${req.body.discription}','${req.body.date}','${req.body.type}')`,()=>{
-        res.send('done')
+    db.query(`INSERT INTO Events(name,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.type}')`,(err)=>{
+      if(err)  {
+        throw err
+      }
+      res.send('done')
     })
 })
 app.get('/',(req,res)=>{
-    db.query('SELECT * FROM Events',(err,rows)=>{
+  
+      db.query('SELECT * FROM Events',(err,rows)=>{
         var arr=rows.rows;
         arr.reverse()
 res.json(arr)    })
+ 
 })
 app.post('/submit',(req,res)=>{
 
@@ -50,6 +52,12 @@ app.post('/submit',(req,res)=>{
     }
     
 })
-
+app.post('/delete',(req,res)=>{
+  console.log(req.body.key)
+  db.query(`DELETE FROM Events WHERE id=${req.body.key}`,(err)=>{
+    if(!err){
+      res.send('done')
+    }
+  })
 })
-
+})
