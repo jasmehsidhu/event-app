@@ -2,10 +2,13 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import pg from 'pg'
+import env from 'dotenv'
+import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
 
 const app=express();
 
+env.config()
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -24,7 +27,7 @@ db.connect()
 
 app.post('/',(req,res)=>{
     console.log(req.body)
-    db.query(`INSERT INTO Events(name,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.type}')`,(err)=>{
+    db.query(`INSERT INTO requests(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.type}')`,(err)=>{
       if(err)  {
         throw err
       }
@@ -32,30 +35,84 @@ app.post('/',(req,res)=>{
     })
 })
 app.get('/',(req,res)=>{
-  
-      db.query('SELECT * FROM Events',(err,rows)=>{
+      db.query('SELECT * FROM ELIST',(err,rows)=>{
         var arr=rows.rows;
-        arr.reverse()
 res.json(arr)    })
  
 })
-app.post('/submit',(req,res)=>{
+app.post('/reject',(req,res)=>{
+  console.log(req.body)
+ const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: 'singhsukh1977.s@gmail.com',
+            pass: "qziw dbee wayq nuyc"  
+        }
+    });
+    const mailOptions = {
+        from: "singhsukh1977.s@gmail.com",
+        to: req.body.contact,
+        subject: `Request Rejected`,
+        text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
+        };
+    
+        try{
+           transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        } else {
+          res.send('e')
+            db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
+                        
+            })
+        }
+    })
+        }
+        catch(err){
+          console.log('Bad email')
+          res.send('e')
+        }
+        ;})
+app.post('/main',(req,res)=>{
+db.query(`INSERT INTO ELIST VALUES('${req.body.id}','${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
+if(err){
+  res.send('err')
+}
+else{
+  db.query(`DELETE FROM requests WHERE id=${req.body.id}`,(err,rows)=>{
+if(!err){
+    res.send('done')
+}
+  })
+}
 
+})})
+app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
     if(rows.rows.length==0||err){
-        res.send(false)
+        res.send('done')
     }
     else{
         bcrypt.compare(req.body.password,rows.rows[0].password,(err,result)=>{
-       res.send(result)
+        if(result){
+          db.query(`SELECT * FROM requests`,(err,rows)=>{
+res.send(rows.rows)    
+       })
+        }
+        else{
+          res.send('done')
+        }
     })
     }
     
 })
 app.post('/delete',(req,res)=>{
   console.log(req.body.key)
-  db.query(`DELETE FROM Events WHERE id=${req.body.key}`,(err)=>{
-    if(!err){
+  db.query(`DELETE FROM ELIST WHERE id=${req.body.key}`,(err)=>{
+    if(err){
+      throw err
+    }
+    else{
       res.send('done')
     }
   })
