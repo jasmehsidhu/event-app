@@ -2,11 +2,13 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import pg from 'pg'
+import env from 'dotenv'
 import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
 
 const app=express();
 
+env.config()
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -34,7 +36,7 @@ app.post('/',(req,res)=>{
 })
 app.get('/',(req,res)=>{
       db.query('SELECT * FROM ELIST',(err,rows)=>{
-        var arr=rows.rows;
+        var arr=rows.rows.reverse();
 res.json(arr)    })
  
 })
@@ -83,7 +85,6 @@ if(!err){
 }
   })
 }
-
 })})
 app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
@@ -94,7 +95,7 @@ app.post('/submit',(req,res)=>{
         bcrypt.compare(req.body.password,rows.rows[0].password,(err,result)=>{
         if(result){
           db.query(`SELECT * FROM requests`,(err,rows)=>{
-res.send(rows.rows)    
+res.send(rows.rows.reverse())    
        })
         }
         else{
