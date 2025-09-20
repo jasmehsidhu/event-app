@@ -69,7 +69,7 @@ app.post('/reject',(req,res)=>{
         try{
            transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            console.log(error);
+            res.send('e')
         } else {
           res.send('e')
             db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
