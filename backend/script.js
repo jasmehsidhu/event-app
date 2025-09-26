@@ -47,11 +47,11 @@ if(err){
 }
 else{
   res.send('done')
+  console.log('hello2')
 }
 })
 })
 app.post('/reject',(req,res)=>{
-  console.log(req.body)
  const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -105,14 +105,17 @@ app.post('/submit',(req,res)=>{
         bcrypt.compare(req.body.password,rows.rows[0].password,(err,result)=>{
         if(result){
           db.query(`SELECT * FROM requests`,(err,rows)=>{
-res.send(rows.rows.reverse())    
+res.send(rows.rows.reverse())  
+console.log("dello")  
        })
         }
         else{
           res.send('done')
+          console.log('hello')
         }
     })
     }
+        console.log('hello')
     
 })
 app.post('/delete',(req,res)=>{
@@ -127,4 +130,3 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
-
