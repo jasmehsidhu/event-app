@@ -67,11 +67,11 @@ app.post('/reject',(req,res)=>{
         try{
            transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            res.send('e')
+            console.log(error)
         } else {
-          res.send('e')
+            res.send('deleted')
             db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
-                        
+                       console.log('hello')
             })
         }
     })
@@ -128,4 +128,3 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
-
