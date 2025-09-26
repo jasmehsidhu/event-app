@@ -2,11 +2,13 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import pg from 'pg'
+import env from 'dotenv'
 import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
 
 const app=express();
 
+env.config()
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -38,18 +40,8 @@ app.get('/',(req,res)=>{
 res.json(arr)    })
  
 })
-app.post('/admin',(req,res)=>{
- db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.type}')`,(err,rows)=>{
-if(err){
-  res.send('err')
-}
-else{
-  res.send('done')
-  console.log('hello2')
-}
-})
-})
 app.post('/reject',(req,res)=>{
+  console.log(req.body)
  const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -67,11 +59,11 @@ app.post('/reject',(req,res)=>{
         try{
            transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            console.log(error)
+            console.log(error);
         } else {
-            res.send('deleted')
+          res.send('e')
             db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
-                       console.log('hello')
+                        
             })
         }
     })
@@ -82,7 +74,7 @@ app.post('/reject',(req,res)=>{
         }
         ;})
 app.post('/main',(req,res)=>{
-db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
+db.query(`INSERT INTO ELIST VALUES('${req.body.id}','${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
 if(err){
   res.send('err')
 }
@@ -97,23 +89,20 @@ if(!err){
 app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
     if(rows.rows.length==0||err){
-        res.send('bc')
+        res.send('done')
     }
     else{
         bcrypt.compare(req.body.password,rows.rows[0].password,(err,result)=>{
         if(result){
           db.query(`SELECT * FROM requests`,(err,rows)=>{
-res.send(rows.rows.reverse())  
-console.log("dello")  
+res.send(rows.rows.reverse())    
        })
         }
         else{
           res.send('done')
-          console.log('hello')
         }
     })
     }
-        console.log('hello')
     
 })
 app.post('/delete',(req,res)=>{
@@ -128,3 +117,4 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
