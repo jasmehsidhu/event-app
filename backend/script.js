@@ -52,8 +52,7 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
- try{
-  const transporter = nodemailer.createTransport({
+ const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
             user: 'singhsukh1977.s@gmail.com',
@@ -85,10 +84,6 @@ app.post('/reject',(req,res)=>{
           console.log('Bad email')
           res.send('e')
         }
- }
- catch(err){
-  res.send(err)
- }
         ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
@@ -137,3 +132,4 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
