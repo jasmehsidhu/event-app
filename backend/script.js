@@ -2,11 +2,13 @@ import express from 'express';
 import cors from 'cors'
 import compression from 'compression';
 import pg from 'pg'
+import env from 'dotenv'
 import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
 
 const app=express();
 
+env.config()
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
@@ -50,8 +52,44 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
- res.send('ok')
-        })
+ try{
+  const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: 'singhsukh1977.s@gmail.com',
+            pass: "qziw dbee wayq nuyc"  
+        }
+    });
+    const mailOptions = {
+        from: "singhsukh1977.s@gmail.com",
+        to: req.body.contact,
+        subject: `Request Rejected`,
+        text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
+        };
+    
+        try{
+           transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error)
+        } else {
+            res.send('deleted')
+            db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
+              if(!err){
+                console.log('hello')
+              }
+            })
+        }
+    })
+        }
+        catch(err){
+          console.log('Bad email')
+          res.send('e')
+        }
+ }
+ catch(err){
+  res.send(err)
+ }
+        ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
 if(err){
@@ -99,4 +137,3 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
-
