@@ -67,13 +67,13 @@ app.post('/reject',(req,res)=>{
         };
            transporter.sendMail(mailOptions, (error, info) => {
         res.send('hello')
-    })
-        db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
+           db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
               if(!err){
                 console.log('hello')
                 res.send('ok')
               }
             })
+    })
         ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
@@ -122,3 +122,4 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
