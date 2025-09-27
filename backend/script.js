@@ -69,7 +69,7 @@ app.post('/reject',(req,res)=>{
         if (error) {
             res.send(error)
         } else {
-  
+          res.send("hello")
         }
     })
         db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
@@ -126,3 +126,4 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
