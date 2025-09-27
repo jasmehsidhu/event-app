@@ -57,7 +57,12 @@ app.post('/reject',(req,res)=>{
         auth: {
             user: 'singhsukh1977.s@gmail.com',
             pass: "qziw dbee wayq nuyc"  
-        }
+        },
+         secure: true,
+            port: 465,
+            tls: {
+                rejectUnauthorized: false
+            }
     });
     const mailOptions = {
         from: "singhsukh1977.s@gmail.com",
@@ -65,14 +70,8 @@ app.post('/reject',(req,res)=>{
         subject: `Request Rejected`,
         text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
         };
-           transporter.sendMail(mailOptions, (error, info) => {
+   transporter.sendMail(mailOptions, (error, info) => {
         res.send('hello')
-           db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
-              if(!err){
-                console.log('hello')
-                res.send('ok')
-              }
-            })
     })
         ;})
 app.post('/main',(req,res)=>{
@@ -122,4 +121,5 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
 
