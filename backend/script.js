@@ -51,39 +51,33 @@ else{
 }
 })
 })
-app.post('/reject',(req,res)=>{
-  console.log(req.body)
- const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: 'singhsukh1977.s@gmail.com',
-            pass: "qziw dbee wayq nuyc"  
-        }
-    });
-    const mailOptions = {
-        from: "singhsukh1977.s@gmail.com",
-        to: req.body.contact,
-        subject: `Request Rejected`,
-        text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
-        };
-    
-        try{
-           transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            res.send('e')
-        } else {
-          res.send('e')
-            db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
-                        
-            })
-        }
-    })
-        }
-        catch(err){
-          console.log('Bad email')
-          res.send('e')
-        }
-        ;})
+app.post('/reject', (req, res) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "singhsukh1977.s@gmail.com",      // your Gmail
+      pass: "qziw dbee wayq nuyc"             // app password
+    }
+  });
+
+  const mailOptions = {
+    from: "singhsukh1977.s@gmail.com",
+    to: req.body.contact,
+    subject: "Request Rejected",
+    text: `Unfortunately, your event request has been rejected. Reason: ${req.body.reason}`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("EMAIL ERROR:", error);
+      res.status(500).send("Email failed: " + error.message);
+    } else {
+      console.log("Email sent:", info.response);
+      res.send("done");
+    }
+  });
+});
+
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
 if(err){
@@ -131,7 +125,5 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
-
-
 
 
