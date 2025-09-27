@@ -52,31 +52,26 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
-try{
-   const transporter = nodemailer.createTransport({
+ const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
             user: 'singhsukh1977.s@gmail.com',
             pass: "qziw dbee wayq nuyc"  
         }
     });
-}
-catch(err){
-  res.send(err)
-}
     const mailOptions = {
         from: "singhsukh1977.s@gmail.com",
         to: req.body.contact,
         subject: `Request Rejected`,
         text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
         };
-//            transporter.sendMail(mailOptions, (error, info) => {
-//         if (error) {
-//             res.send(error)
-//         } else {
+           transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            res.send(error)
+        } else {
   
-//         }
-//     })
+        }
+    })
         db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
               if(!err){
                 console.log('hello')
