@@ -52,32 +52,32 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
- const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: 'singhsukh1977.s@gmail.com',
-            pass: "qziw dbee wayq nuyc"  
-        }
-    });
-    const mailOptions = {
-        from: "singhsukh1977.s@gmail.com",
-        to: req.body.contact,
-        subject: `Request Rejected`,
-        text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
-        };
-           transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            res.send(error)
-        } else {
-             db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
+//  const transporter = nodemailer.createTransport({
+//         service: "gmail",
+//         auth: {
+//             user: 'singhsukh1977.s@gmail.com',
+//             pass: "qziw dbee wayq nuyc"  
+//         }
+//     });
+//     const mailOptions = {
+//         from: "singhsukh1977.s@gmail.com",
+//         to: req.body.contact,
+//         subject: `Request Rejected`,
+//         text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
+//         };
+//            transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//             res.send(error)
+//         } else {
+  
+//         }
+//     })
+        db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
               if(!err){
                 console.log('hello')
                 res.send('ok')
               }
             })
-        }
-    })
-      
         ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
