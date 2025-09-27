@@ -71,8 +71,17 @@ app.post('/reject',(req,res)=>{
         text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
         };
    transporter.sendMail(mailOptions, (error, info) => {
-        res.send('hello')
-    })
+           if(error){
+            console.error('EMAIL ERROR:', error);
+                console.error('Error code:', error.code);
+                console.error('Error message:', error.message);
+                return res.status(500).json({ 
+                    error: 'Email failed', 
+                    details: error.message,
+                    code: error.code 
+                });
+           }
+  })
         ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
@@ -121,5 +130,6 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
 
 
