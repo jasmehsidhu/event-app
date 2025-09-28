@@ -61,13 +61,27 @@ app.post('/reject',(req,res)=>{
     });
     const mailOptions = {
         from: "singhsukh1977.s@gmail.com",
-        to: 'jasmeh76@gmail.com',
+        to: req.body.contact,
         subject: `Request Rejected`,
-        text: `Unfortunately, your event request is rejected`  
+        text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
         };
- transporter.sendMail(mailOptions, (error, info) => {
-      res.send('hello')
+    
+        try{
+           transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            res.send('e')
+        } else {
+          res.send('e')
+            db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
+                        
+            })
+        }
     })
+        }
+        catch(err){
+          console.log('Bad email')
+          res.send('e')
+        }
         ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
@@ -113,5 +127,7 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
+
 
 
