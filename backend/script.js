@@ -5,6 +5,7 @@ import pg from 'pg'
 import env from 'dotenv'
 import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
+import e from 'express';
 
 const app=express();
 
@@ -63,25 +64,13 @@ app.post('/reject',(req,res)=>{
         from: "singhsukh1977.s@gmail.com",
         to: req.body.contact,
         subject: `Request Rejected`,
-        text: `Unfortunately, your event request is rejected, ${req.body.reason}`  
+        text: `Unfortunately, your event request is rejected,`  
         };
     
-        try{
+
            transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            res.send('e')
-        } else {
-          res.send('e')
-            db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
-                        
-            })
-        }
-    })
-        }
-        catch(err){
-          console.log('Bad email')
-          res.send('e')
-        }
+            console.log("Sent!")
+           })
         ;})
 app.post('/main',(req,res)=>{
 db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
@@ -127,7 +116,3 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
-
-
-
-
