@@ -61,7 +61,7 @@ app.post('/reject', (req, res) => {
     secure: false,
     auth: {
       user: 'singhsukh1977.s@gmail.com',
-      pass: "qziw dbee wayq nuyc"
+      pass: "watl kavj zwim xnyj"
     },
     debug: true, // Enable debug output
     logger: true // Log to console
@@ -142,4 +142,5 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
 
