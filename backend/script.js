@@ -56,8 +56,8 @@ const client = new SMTPClient({
     user: "singhsukh1977.s@gmail.com",
     password: "watl kavj zwim xnyj",
     host: "smtp.gmail.com",
-    ssl: true
-  });
+port: 587,  // Use port 587 instead of 465
+    tls: true  });
 
   client.send({
     text: "Hello, this is a test email sent with EmailJS!",
@@ -102,5 +102,3 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
-
-
