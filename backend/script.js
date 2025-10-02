@@ -5,8 +5,7 @@ import pg from 'pg'
 import env from 'dotenv'
 import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
-import {SMTPClient} from 'emailjs'
-
+import sgmail from '@sendgrid/mail'
 const app=express();
 
 env.config()
@@ -52,24 +51,18 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
-const client = new SMTPClient({
-    user: "singhsukh1977.s@gmail.com",
-    password: "watl kavj zwim xnyj",
-    host: "smtp.gmail.com",
-port: 587,  // Use port 587 instead of 465
-    tls: true  });
-
-  client.send({
-    text: "Hello, this is a test email sent with EmailJS!",
-    from: "You <singhsukh1977.s@gmail.com>",
-    to: `Recipient <${req.body.contact}>`,
-    subject: `Unfortunately your event request has been rejected, ${req.body.reason}`,
-  }, (err, message) => {
-    console.log(message)
-     db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
-                    res.send("done")    
-            })
-  });
+ var api_key='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'
+ sgmail.setApiKey(api_key)
+ var message={
+   to:`${req.body.contact}`,
+   from:'singhsukh1977.s@gmail.com',
+   subject:'Request rejected',
+   text:`Unfortunately your event request is rejected , ${req.body.reason}`
+ }
+ sgmail.send(message).then((r=>{
+db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
+                  res.send('done')      
+            }) }))
 })
 app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
@@ -102,3 +95,4 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
