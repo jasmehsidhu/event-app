@@ -51,7 +51,7 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
- var api_key='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'
+ var api_key=process.env.SEND
  sgmail.setApiKey(api_key)
  var message={
    to:`${req.body.contact}`,
@@ -95,4 +95,5 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
 
