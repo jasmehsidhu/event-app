@@ -50,19 +50,6 @@ else{
 }
 })
 })
-app.post('/main',(req,res)=>{
-db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
-if(err){
-  res.send('err')
-}
-else{
-  db.query(`DELETE FROM requests WHERE id=${req.body.id}`,(err,rows)=>{
-if(!err){
-    res.send('done')
-}
-  })
-}
-})})
 app.post('/reject',(req,res)=>{
  var api_key=process.env.SEND
  sgmail.setApiKey(api_key)
@@ -79,20 +66,21 @@ db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
 })
 app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
+      console.log(rows)
     if(rows.rows.length==0||err){
         res.send('bc')
     }
     else{
-        bcrypt.compare(req.body.password,rows.rows[0].password,(err,result)=>{
-        if(result){
+      
+        if(rows.rows[0].password==req.body.password){
           db.query(`SELECT * FROM requests`,(err,rows)=>{
 res.send(rows.rows.reverse())    
        })
         }
         else{
+          console.log(rows.rows[0].password,req.body.password)
           res.send('done')
         }
-    })
     }
     
 })
@@ -108,6 +96,8 @@ app.post('/delete',(req,res)=>{
   })
 })
 })
+
+
 
 
 
