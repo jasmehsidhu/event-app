@@ -53,19 +53,11 @@ else{
 })
 })
 app.post('/reject',(req,res)=>{
- var api_key=process.env.SEND
- sgmail.setApiKey(api_key)
- var message={
-   to:`${req.body.contact}`,
-   from:'singhsukh1977.s@gmail.com',
-   subject:'Request rejected',
-   text:`Unfortunately your event request is rejected , ${req.body.reason}`
- }
- sgmail.send(message).then((r=>{
+
 db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
                   res.send('done')      
-            }) }))
-})
+            }) })
+
 app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
       console.log(rows)
