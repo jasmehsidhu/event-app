@@ -90,3 +90,16 @@ app.post('/delete',(req,res)=>{
     }
   })
 })
+app.post('/main',(req,res)=>{
+db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
+if(err){
+  res.send('err')
+}
+else{
+  db.query(`DELETE FROM requests WHERE id=${req.body.id}`,(err,rows)=>{
+if(!err){
+    res.send('done')
+}
+  })
+}
+})})
