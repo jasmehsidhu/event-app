@@ -13,7 +13,9 @@ app.listen(2000,()=>{
     console.log("Server Started!")
 })
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: "https://turnerevents.onrender.com"
+}))
 app.use(compression())
 var db=new pg.Client({
   host: process.env.HOST, // Render host
@@ -64,7 +66,6 @@ db.query(`DELETE FROM requests WHERE id=${req.body.key}`,(err,rows)=>{
                   res.send('done')      
             }) }))
 })
-
 app.post('/submit',(req,res)=>{
     db.query(`SELECT * FROM auths WHERE username='${req.body.username}'`,(err,rows)=>{
       console.log(rows)
@@ -85,6 +86,7 @@ res.send(rows.rows.reverse())
     }
     
 })
+})
 app.post('/delete',(req,res)=>{
   console.log(req.body.key)
   db.query(`DELETE FROM ELIST WHERE id=${req.body.key}`,(err)=>{
@@ -96,23 +98,3 @@ app.post('/delete',(req,res)=>{
     }
   })
 })
-})
-app.post('/main',(req,res)=>{
-db.query(`INSERT INTO ELIST(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.etype}')`,(err,rows)=>{
-if(err){
-  res.send('err')
-}
-else{
-  db.query(`DELETE FROM requests WHERE id=${req.body.id}`,(err,rows)=>{
-if(!err){
-    res.send('done')
-}
-  })
-}
-})})
-
-
-
-
-
-
