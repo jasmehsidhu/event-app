@@ -13,7 +13,8 @@ app.listen(2000,()=>{
 })
 app.use(express.json())
 app.use(cors({
-  origin: "https://turnerevents.onrender.com"
+  origin: 'https://turnerevents.onrender.com', // your frontend origin
+  methods: ['GET', 'POST', 'DELETE'],
 }));
 app.use(compression())
 var db=new pg.Client({
