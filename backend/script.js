@@ -7,13 +7,12 @@ import nodemailer from 'nodemailer'
 import bcrypt from 'bcrypt'
 import sgmail from '@sendgrid/mail'
 const app=express();
-
 env.config()
 app.listen(2000,()=>{
     console.log("Server Started!")
 })
 app.use(express.json())
-app.use(cors());
+app.use(cors())
 app.use(compression())
 var db=new pg.Client({
   host: process.env.HOST, // Render host
@@ -29,7 +28,7 @@ app.post('/',(req,res)=>{
     console.log(req.body)
     db.query(`INSERT INTO requests(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.type}')`,(err)=>{
       if(err)  {
-       
+        
       }
       res.send('done')
     })
@@ -37,10 +36,11 @@ app.post('/',(req,res)=>{
 app.get('/',(req,res)=>{
       db.query('SELECT * FROM ELIST',(err,rows)=>{
         if(err){
+         
         }  
       else{
         if (rows.rows.length>0){
-res.json(rows.rows.revers())
+res.json(rows.rows.reverse())
         }  
       }})
  
