@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt'
 import sgmail from '@sendgrid/mail'
 const app=express();
 env.config()
-app.listen(2000,'0.0.0.0',()=>{
+app.listen(process.env.PORT||2000,'0.0.0.0',()=>{
     console.log("Server Started!")
 })
 app.use(express.json())
