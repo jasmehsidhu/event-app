@@ -29,7 +29,7 @@ app.post('/',(req,res)=>{
     console.log(req.body)
     db.query(`INSERT INTO requests(name,contact,location,sdis,ldis,date,etype) VALUES('${req.body.name}','${req.body.contact}','${req.body.location}','${req.body.sdis}','${req.body.ldis}','${req.body.date}','${req.body.type}')`,(err)=>{
       if(err)  {
-        throw err
+       
       }
       res.send('done')
     })
