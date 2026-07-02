@@ -12,7 +12,15 @@ app.listen(2000,()=>{
     console.log("Server Started!")
 })
 app.use(express.json())
-app.use(cors())
+app.use(
+  cors({
+    origin: [
+      "https://turnerevents.com",
+      "https://your-frontend.onrender.com",
+    ],
+    credentials: true,
+  })
+);
 app.use(compression())
 var db=new pg.Client({
   host: process.env.HOST, // Render host
