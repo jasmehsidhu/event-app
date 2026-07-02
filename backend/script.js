@@ -36,12 +36,10 @@ app.post('/',(req,res)=>{
 app.get('/',(req,res)=>{
       db.query('SELECT * FROM ELIST',(err,rows)=>{
         if(err){
-         
+         throw err
         }  
       else{
-        if (rows.rows.length>0){
-res.json(rows.rows.reverse())
-        }  
+      res.json(rows.rows.reverse())
       }})
  
 })
