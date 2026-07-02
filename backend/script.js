@@ -13,7 +13,9 @@ app.listen(2000,()=>{
     console.log("Server Started!")
 })
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: "https://turnerevents.onrender.com"
+}))
 app.use(compression())
 var db=new pg.Client({
   host: process.env.HOST, // Render host
@@ -36,8 +38,9 @@ app.post('/',(req,res)=>{
 })
 app.get('/',(req,res)=>{
       db.query('SELECT * FROM ELIST',(err,rows)=>{
-        var arr=rows.rows.reverse();
-res.json(arr)    })
+        if (rows.rows.length>0){
+res.json(arr)
+        }    })
  
 })
 app.post('/admin',(req,res)=>{
@@ -66,7 +69,7 @@ app.post('/submit',(req,res)=>{
       
         if(rows.rows[0].password==req.body.password){
           db.query(`SELECT * FROM requests`,(err,rows)=>{
-res.send(rows.rows.reverse())    
+res.send(rows.rows.length>0?rows.rows.reverse():null)    
        })
         }
         else{
