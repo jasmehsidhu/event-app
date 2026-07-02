@@ -40,7 +40,7 @@ app.get('/',(req,res)=>{
         }  
       else{
         if (rows.rows.length>0){
-res.json(arr)
+res.json(rows.rows.revers())
         }  
       }})
  
